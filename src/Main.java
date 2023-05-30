@@ -1,7 +1,9 @@
-import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -21,11 +23,23 @@ public class Main {
             return;
         }
 
-        RandomGF251 randInstance = new RandomGF251();
-        int ri = randInstance.generateRandom();
 
-        while (ri == 0){
-            ri = randInstance.generateRandom();
+
+        List<Integer> pixels = new ArrayList<>();
+        List<Block> blocks = new ArrayList<>();
+        int count = 0;
+        for (int y = 0; y < img.getHeight(); y++) {
+            for (int x = 0; x < img.getWidth(); x++) {
+
+                //todo check pixels not be 0, if its 0 change it to 1
+                pixels.add(img.getPixel(x, y));
+                if(count % parser.getBLOCK_SIZE() == 0){
+                    blocks.add(new Block(pixels, parser.getK()-1));
+                    count = 0;
+                    pixels.clear();
+                }
+                count++;
+            }
         }
     }
 }
