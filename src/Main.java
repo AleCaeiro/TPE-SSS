@@ -12,37 +12,20 @@ public class Main {
         }
 
         ArgumentsParser parser = new ArgumentsParser(args[0], args[1], args[2], args[3]);
-
-        BufferedImage image = null;
-        try{
-            // Cargar la imagen BMP
-            image = ImageIO.read(new File(parser.getImgPath()));
-        }catch (IOException e){
-            System.out.println("Error al abrir la imagen: " + e.getMessage());
-        }
+        OriginalImage img = new OriginalImage(parser.getImgPath());
 
 
-        // Obtener las dimensiones de la imagen
-        assert image != null;
-        int imgWidth = image.getWidth();
-        int imgHeight = image.getHeight();
-
-        if((imgWidth*imgHeight) % (parser.getBLOCK_SIZE()) != 0){
+        //Chequeamos que la imagen sea divisible por 2k-2
+        if((img.getTotalSize()) % (parser.getBLOCK_SIZE()) != 0){
             System.out.println("La imagen no es divisible por la dimension del bloque");
             return;
         }
 
-        // Procesar la imagen píxel por píxel
-        for (int y = 0; y < imgHeight; y++) {
-            for (int x = 0; x < imgWidth; x++) {
-                /*
-                getRaster: Devuelve una matriz de pixeles
-                getSample: Devuelve un pixel de la matriz
-                */
-                int pixel = image.getRaster().getSample(x, y, 0);
-            }
-        }
+        RandomGF251 randInstance = new RandomGF251();
+        int ri = randInstance.generateRandom();
 
-        ImageIO.write(image, "bmp", new File("resources/inverted.bmp"));
+        while (ri == 0){
+            ri = randInstance.generateRandom();
+        }
     }
 }
