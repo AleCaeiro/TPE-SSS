@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="sss">
-    <output-path>$PROJECT_DIR$/out/artifacts/sss</output-path>
-    <root id="archive" name="sss.jar" />
-  </artifact>
-</component>
