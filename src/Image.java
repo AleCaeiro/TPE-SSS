@@ -3,10 +3,10 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class OriginalImage {
+public class Image {
     private BufferedImage image;
 
-    public OriginalImage(String imgPath) {
+    public Image(String imgPath) {
         BufferedImage image = null;
         try{
             // Cargar la imagen BMP

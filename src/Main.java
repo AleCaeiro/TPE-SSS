@@ -1,6 +1,4 @@
 
-import javax.imageio.ImageIO;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +12,7 @@ public class Main {
         }
 
         ArgumentsParser parser = new ArgumentsParser(args[0], args[1], args[2], args[3]);
-        OriginalImage img = new OriginalImage(parser.getImgPath());
+        Image img = new Image(parser.getImgPath());
 
 
         //Chequeamos que la imagen sea divisible por 2k-2
@@ -23,11 +21,16 @@ public class Main {
             return;
         }
 
+        System.out.println(img.getPixel(0,0));
+
 
 
         List<Integer> pixels = new ArrayList<>();
         List<Block> blocks = new ArrayList<>();
+        List<Shades> shades = new ArrayList<>();
         int count = 0;
+        int blockNum = 1;
+        int n = 4; //todo: revisar este n
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
 
@@ -39,16 +42,17 @@ public class Main {
                 pixels.add(pixel);
                 count++;
                 if(count == parser.getBLOCK_SIZE()){
-                    blocks.add(new Block(pixels, parser.getK()-1));
+
+                    Block actualBlock = new Block(pixels, parser.getK()-1, blockNum);
+                    blocks.add(actualBlock);
+                    shades.add(new Shades(actualBlock.getF(), actualBlock.getG(), n));
+                    blockNum++;
                     count = 0;
                     pixels.clear();
                 }
 
             }
         }
-
-        System.out.println(blocks.get(0).getPixels().get(0));
-        System.out.println(blocks.get(0).getF().getCoefficient(0));
 
     }
 }

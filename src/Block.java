@@ -5,12 +5,14 @@ public class Block {
     private List<Integer> pixels;
     private Polynomial f;
     private Polynomial g;
+    private int blockNum;
 
-    public Block(List<Integer> pixels, int degree) {
+    public Block(List<Integer> pixels, int degree, int blockNum) {
         this.pixels = pixels;
-        //todo: hablar esto: en una sublista no incluye el extremo derecho
+        //sublist do not include the right end of parameter, because of that we need to add 1 in each one
         this.f = new Polynomial(pixels.subList(0, degree+1));
         this.g = new Polynomial(calculateG(this.f, pixels.subList(degree + 1, pixels.size())));
+        this.blockNum = blockNum;
     }
 
     private List<Integer> calculateG(Polynomial f, List<Integer> restG) {
@@ -50,5 +52,9 @@ public class Block {
 
     public Polynomial getG() {
         return g;
+    }
+
+    public int getBlockNum() {
+        return blockNum;
     }
 }
