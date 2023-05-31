@@ -31,15 +31,24 @@ public class Main {
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
 
-                //todo check pixels not be 0, if its 0 change it to 1
-                pixels.add(img.getPixel(x, y));
-                if(count % parser.getBLOCK_SIZE() == 0){
+                //pixel obtained can not be 0
+                int pixel = img.getPixel(x, y);
+                if(pixel == 0){
+                    pixel = 1;
+                }
+                pixels.add(pixel);
+                count++;
+                if(count == parser.getBLOCK_SIZE()){
                     blocks.add(new Block(pixels, parser.getK()-1));
                     count = 0;
                     pixels.clear();
                 }
-                count++;
+
             }
         }
+
+        System.out.println(blocks.get(0).getPixels().get(0));
+        System.out.println(blocks.get(0).getF().getCoefficient(0));
+
     }
 }
