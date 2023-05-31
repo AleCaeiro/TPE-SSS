@@ -12,7 +12,7 @@ public class Main {
         }
 
         ArgumentsParser parser = new ArgumentsParser(args[0], args[1], args[2], args[3]);
-        Image img = new Image(parser.getImgPath());
+        SecretImage img = new SecretImage(parser.getImgPath());
 
 
         //Chequeamos que la imagen sea divisible por 2k-2
@@ -20,9 +20,6 @@ public class Main {
             System.out.println("La imagen no es divisible por la dimension del bloque");
             return;
         }
-
-        System.out.println(img.getPixel(0,0));
-
 
 
         List<Integer> pixels = new ArrayList<>();
@@ -43,9 +40,9 @@ public class Main {
                 count++;
                 if(count == parser.getBLOCK_SIZE()){
 
-                    Block actualBlock = new Block(pixels, parser.getK()-1, blockNum);
-                    blocks.add(actualBlock);
-                    shades.add(new Shades(actualBlock.getF(), actualBlock.getG(), n));
+                    Block currentBlock = new Block(pixels, parser.getK()-1, blockNum);
+                    blocks.add(currentBlock);
+                    shades.add(new Shades(currentBlock, n));
                     blockNum++;
                     count = 0;
                     pixels.clear();
