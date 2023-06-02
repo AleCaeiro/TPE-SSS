@@ -2,12 +2,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Block {
+
+    private final static int MOD = 251;
     private List<Integer> pixels;
     private Polynomial f;
     private Polynomial g;
     private int blockNum;
 
+    private GF GF251;
+
     public Block(List<Integer> pixels, int degree, int blockNum) {
+        this.GF251 = new GF(MOD);
         this.pixels = pixels;
         //sublist do not include the right end of parameter, because of that we need to add 1 in each one
         this.f = new Polynomial(pixels.subList(0, degree+1));
@@ -16,12 +21,11 @@ public class Block {
     }
 
     private List<Integer> calculateG(Polynomial f, List<Integer> restG) {
-        RandomGF251 randInstance = new RandomGF251();
-        int ri = randInstance.generateRandom();
+        int ri;
 
-        while (ri == 0){
-            ri = randInstance.generateRandom();
-        }
+        do {
+            ri = this.GF251.generateRandom();
+        }while (ri == 0);
 
         Integer b0 = calculateEquation(ri, f.getCoefficient(0));
         Integer b1 = calculateEquation(ri, f.getCoefficient(1));
@@ -35,11 +39,7 @@ public class Block {
     }
 
     private Integer calculateEquation(int r, int a) {
-        int b = (-(r * a)) % 251;
-        if (b < 0) {
-            b += 251;
-        }
-        return b;
+        return this.GF251.transformToGF(-(r * a));
     }
 
     public List<Integer> getPixels() {

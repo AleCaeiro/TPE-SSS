@@ -14,6 +14,17 @@ public class Main {
         ArgumentsParser parser = new ArgumentsParser(args[0], args[1], args[2], args[3]);
         SecretImage img = new SecretImage(parser.getImgPath());
 
+        Shades recoveredShades = new Shades();
+        recoveredShades.addRecoveredValue(1, 3, true);
+        recoveredShades.addRecoveredValue(5, 10, true);
+        recoveredShades.addRecoveredValue(2, 9, true);
+
+        recoveredShades.addRecoveredValue(1, 3, false);
+        recoveredShades.addRecoveredValue(5, 10, false);
+        recoveredShades.addRecoveredValue(2, 9, false);
+
+        recoveredShades.applyLagrange(3);
+
 
         //Chequeamos que la imagen sea divisible por 2k-2
         if((img.getTotalSize()) % (parser.getBLOCK_SIZE()) != 0){
