@@ -5,10 +5,10 @@ public class Block {
     private final static int MOD = 251;
     private final static GF GF251 = new GF(MOD);
 
-    private List<Integer> pixels;
-    private Polynomial f;
-    private Polynomial g;
-    private int blockNum;
+    private final List<Integer> pixels;
+    private final Polynomial f;
+    private final Polynomial g;
+    private final int blockNum;
 
     public Block(List<Integer> pixels, int degree, int blockNum) {
         this.pixels = pixels;
@@ -22,7 +22,7 @@ public class Block {
         int ri;
 
         do {
-            ri = this.GF251.generateRandom();
+            ri = GF251.generateRandom();
         }while (ri == 0);
 
         Integer b0 = calculateEquation(ri, f.getCoefficient(0));
@@ -37,7 +37,7 @@ public class Block {
     }
 
     private Integer calculateEquation(int r, int a) {
-        return this.GF251.transformToGF(-(r * a));
+        return GF251.transformToGF(-(r * a));
     }
 
     public List<Integer> getPixels() {

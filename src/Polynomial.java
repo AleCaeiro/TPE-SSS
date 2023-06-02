@@ -5,7 +5,7 @@ public class Polynomial {
     private final static int MOD = 251;
     private final static GF GF251 = new GF(MOD);
 
-    private List<Integer> coefficients;
+    private final List<Integer> coefficients;
 
     public Polynomial(List<Integer> coefficients) {
         this.coefficients = new ArrayList<>(coefficients);

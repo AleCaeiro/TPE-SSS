@@ -1,4 +1,4 @@
-import java.lang.reflect.AnnotatedType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,10 +58,9 @@ public class Shades {
                 return true;
             }
 
-            if (!(obj instanceof Pair)) {
+            if (!(obj instanceof Pair other)) {
                 return false;
             }
-            Pair other = (Pair) obj;
             return this.left.equals(other.left) && this.right.equals(other.right);
         }
     }
@@ -121,13 +120,13 @@ public class Shades {
 
     private int Li(Pair currentShade, List<Pair> recoveredShades) {
         int result = 1;
-        for(int i = 0 ; i < recoveredShades.size() ; i++) {
-            if(!recoveredShades.get(i).equals(currentShade)) {
-                Integer denominator = ((currentShade.getLeft() - recoveredShades.get(i).getLeft()));
+        for (Pair recoveredShade : recoveredShades) {
+            if (!recoveredShade.equals(currentShade)) {
+                Integer denominator = ((currentShade.getLeft() - recoveredShade.getLeft()));
 
                 denominator = GF251.transformToGF(denominator);
 
-                result*= -recoveredShades.get(i).getLeft() * GF251.getInverse(denominator);
+                result *= -recoveredShade.getLeft() * GF251.getInverse(denominator);
             }
         }
 
