@@ -1,21 +1,20 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Polynomial {
     private List<Integer> coefficients;
+    private final static int MOD = 251;
 
     public Polynomial(List<Integer> coefficients) {
         this.coefficients = new ArrayList<>(coefficients);
     }
 
-    public Integer getCoefficient(int i){
+    public Integer getCoefficient(int i) {
         return coefficients.get(i);
     }
 
     public int getDegree() {
-        return coefficients.size()-1;
+        return coefficients.size() - 1;
     }
 
     public Integer evaluate(int shadeNum) {
@@ -28,7 +27,7 @@ public class Polynomial {
             result += coefficient * term;
         }
 
-        return result % 251;
+        return result % MOD;
     }
 
     @Override

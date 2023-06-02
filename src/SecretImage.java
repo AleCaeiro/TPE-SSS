@@ -7,11 +7,10 @@ public class SecretImage {
     private BufferedImage image;
 
     public SecretImage(String imgPath) {
-        BufferedImage image = null;
-        try{
+        try {
             // Cargar la imagen BMP
             this.image = ImageIO.read(new File(imgPath));
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error al abrir la imagen: " + e.getMessage());
         }
     }
@@ -25,7 +24,7 @@ public class SecretImage {
     }
 
     public int getTotalSize() {
-        return this.getWidth()*this.getHeight();
+        return this.getWidth() * this.getHeight();
     }
 
     public int getPixel(int x, int y) {
@@ -35,7 +34,6 @@ public class SecretImage {
     public void setPixel(int x, int y, int newPixel) {
         this.image.getRaster().setSample(x, y, 0, newPixel);
     }
-
 
     public BufferedImage getImage() {
         return this.image;

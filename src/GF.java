@@ -2,7 +2,7 @@ import java.util.Random;
 
 public class GF {
 
-    private final static int [] INVERTS = {
+    private final static int [] INVERSES = {
             /*0, 1, 126, 84, 63, 201, 42, 36, 157, 28, 226, 137, 21, 58, 18, 67, 204,
             192, 14, 185, 113, 12, 194, 131, 136, 241, 29, 93, 9, 26, 159, 81, 102,
             213, 96, 208, 7, 95, 218, 103, 182, 49, 6, 216, 97, 106, 191, 235, 68,
@@ -23,6 +23,7 @@ public class GF {
     };
 
     private final int mod;
+
     public GF(int mod) {
         this.mod = mod;
     }
@@ -33,16 +34,11 @@ public class GF {
     }
 
     public Integer transformToGF(Integer num) {
-        num = num % this.mod;
-
-        if(num < 0) {
-            num += this.mod;
-        }
-
-        return num;
+        num %= this.mod;
+        return num < 0 ? num + this.mod : num;
     }
 
     public Integer getInvert(Integer num) {
-        return INVERTS[num-1];
+        return INVERSES[num-1];
     }
 }

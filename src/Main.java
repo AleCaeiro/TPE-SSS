@@ -1,10 +1,8 @@
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         if (args.length != 4) {
             System.out.println("Uso: java Program <modo> <imagen> <k> <directorio_sombras>");
@@ -25,13 +23,11 @@ public class Main {
 
         recoveredShades.applyLagrange(3);
 
-
         //Chequeamos que la imagen sea divisible por 2k-2
-        if((img.getTotalSize()) % (parser.getBLOCK_SIZE()) != 0){
+        if ((img.getTotalSize()) % (parser.getBLOCK_SIZE()) != 0) {
             System.out.println("La imagen no es divisible por la dimension del bloque");
             return;
         }
-
 
         List<Integer> pixels = new ArrayList<>();
         List<Block> blocks = new ArrayList<>();
@@ -44,14 +40,14 @@ public class Main {
 
                 //pixel obtained can not be 0
                 int pixel = img.getPixel(x, y);
-                if(pixel == 0){
+                if (pixel == 0) {
                     pixel = 1;
                 }
                 pixels.add(pixel);
                 count++;
-                if(count == parser.getBLOCK_SIZE()){
+                if (count == parser.getBLOCK_SIZE()) {
 
-                    Block currentBlock = new Block(pixels, parser.getK()-1, blockNum);
+                    Block currentBlock = new Block(pixels, parser.getK() - 1, blockNum);
                     blocks.add(currentBlock);
                     shades.add(new Shades(currentBlock, n));
                     blockNum++;
@@ -61,6 +57,5 @@ public class Main {
 
             }
         }
-
     }
 }
