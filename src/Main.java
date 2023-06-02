@@ -27,7 +27,7 @@ public class Main {
 
 
         //Chequeamos que la imagen sea divisible por 2k-2
-        if((img.getTotalSize()) % (parser.getBLOCK_SIZE()) != 0){
+        if((img.getTotalSize()) % (parser.getBlockSize()) != 0){
             System.out.println("La imagen no es divisible por la dimension del bloque");
             return;
         }
@@ -49,7 +49,7 @@ public class Main {
                 }
                 pixels.add(pixel);
                 count++;
-                if(count == parser.getBLOCK_SIZE()){
+                if(count == parser.getBlockSize()){
 
                     Block currentBlock = new Block(pixels, parser.getK()-1, blockNum);
                     blocks.add(currentBlock);
