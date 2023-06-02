@@ -34,7 +34,21 @@ public class Shades {
         public Integer getG_x() {
             return g_x;
         }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(this == obj) {
+                return true;
+            }
+
+            if (!(obj instanceof Pair)) {
+                return false;
+            }
+            Pair other = (Pair) obj;
+            return this.f_x.equals(other.f_x) && this.g_x.equals(other.g_x);
+        }
     }
+
 
 
 }

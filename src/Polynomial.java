@@ -83,4 +83,31 @@ public class Polynomial {
         return sb.toString();
     }
 
+    public Polynomial sumByPolynomial(Polynomial polynomial) {
+        List<Integer> resultCoefficients = new ArrayList<>();
+
+        int degree = getDegree();
+
+        for (int i = 0; i <= degree; i++) {
+            int coefficient1 = getCoefficient(i);
+            int coefficient2 = polynomial.getCoefficient(i);
+            int sum = (coefficient1 + coefficient2) % 251;
+            resultCoefficients.add(sum);
+        }
+
+        return new Polynomial(resultCoefficients);
+    }
+
+    public Polynomial multiplyByScalar(int scalar) {
+        List<Integer> resultCoefficients = new ArrayList<>();
+
+        for (int i = 0; i <= getDegree(); i++) {
+            int coefficient = getCoefficient(i);
+            int product = (coefficient * scalar) % 251;
+            resultCoefficients.add(product);
+        }
+
+        return new Polynomial(resultCoefficients);
+    }
+
 }
