@@ -9,7 +9,6 @@ public class ArgumentsParser {
     private final static int BLOCK_MULTIPLIER = 2;
 
     public ArgumentsParser(String mode, String imgPath, String k, String shadesDirectory) {
-
         if (!mode.equals("d") && !mode.equals("r")) {
             System.out.println("Los modos validos son 'd' o 'r'");
             return;
@@ -21,7 +20,6 @@ public class ArgumentsParser {
         this.shadesDirectory = shadesDirectory;
 
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
-
     }
 
     public String getMode() {

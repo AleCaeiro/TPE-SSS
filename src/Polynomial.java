@@ -1,21 +1,22 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class Polynomial {
+    private final static int MOD = 251;
+    private final static GF GF251 = new GF(MOD);
+
     private List<Integer> coefficients;
 
     public Polynomial(List<Integer> coefficients) {
         this.coefficients = new ArrayList<>(coefficients);
     }
 
-    public Integer getCoefficient(int i){
-        return coefficients.get(i);
+    public Integer getCoefficient(int degree){
+        return coefficients.get(degree);
     }
 
     public int getDegree() {
-        return coefficients.size()-1;
+        return coefficients.size() - 1;
     }
 
     public Integer evaluate(int shadeNum) {
@@ -23,12 +24,12 @@ public class Polynomial {
         int result = 0;
 
         for (int i = 0; i <= degree; i++) {
-            int coefficient = this.getCoefficient(i);
+            int coefficient = coefficients.get(i);
             int term = (int) Math.pow(shadeNum, i);
             result += coefficient * term;
         }
 
-        return result % 251;
+        return GF251.transformToGF(result);
     }
 
     @Override

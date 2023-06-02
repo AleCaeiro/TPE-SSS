@@ -2,25 +2,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Block {
-
     private final static int MOD = 251;
+    private final static GF GF251 = new GF(MOD);
+
     private List<Integer> pixels;
     private Polynomial f;
     private Polynomial g;
     private int blockNum;
 
-    private GF GF251;
-
     public Block(List<Integer> pixels, int degree, int blockNum) {
-        this.GF251 = new GF(MOD);
         this.pixels = pixels;
         //sublist do not include the right end of parameter, because of that we need to add 1 in each one
         this.f = new Polynomial(pixels.subList(0, degree+1));
-        this.g = new Polynomial(calculateG(this.f, pixels.subList(degree + 1, pixels.size())));
+        this.g = calculateG(this.f, pixels.subList(degree + 1, pixels.size()));
         this.blockNum = blockNum;
     }
 
-    private List<Integer> calculateG(Polynomial f, List<Integer> restG) {
+    private Polynomial calculateG(Polynomial f, List<Integer> restG) {
         int ri;
 
         do {
@@ -35,7 +33,7 @@ public class Block {
         aux.add(b1);
         aux.addAll(restG);
 
-        return aux;
+        return new Polynomial(aux);
     }
 
     private Integer calculateEquation(int r, int a) {
