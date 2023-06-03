@@ -14,9 +14,15 @@ public class ArgumentsParser {
             return;
         }
 
+        int kNum = Integer.parseInt(k);
+        if(kNum < 3 || kNum > 8) {
+            System.out.println("Los k validos solo son 3, 4, 5, 6, 7, 8");
+            return;
+        }
+
         this.mode = mode;
         this.imgPath = imgPath;
-        this.k = Integer.parseInt(k);
+        this.k = kNum;
         this.lsb = this.k > 4 ? 2 : 4;
         this.shadesDirectory = shadesDirectory;
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
