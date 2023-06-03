@@ -14,17 +14,21 @@ public class Main {
         ArgumentsParser parser = new ArgumentsParser(args[0], args[1], args[2], args[3]);
         SecretImage img = new SecretImage(parser.getImgPath());
 
-        // MOVE to test
-//        Shades recoveredShades = new Shades();
-//        recoveredShades.addRecoveredValue(1, 3, true);
-//        recoveredShades.addRecoveredValue(5, 10, true);
-//        recoveredShades.addRecoveredValue(2, 9, true);
-//
-//        recoveredShades.addRecoveredValue(1, 3, false);
-//        recoveredShades.addRecoveredValue(5, 10, false);
-//        recoveredShades.addRecoveredValue(2, 9, false);
-//
-//        recoveredShades.applyLagrange(3);
+        /*MOVE to test
+        List<Integer> portNum = new ArrayList<>();
+        List<Integer> f = new ArrayList<>();
+
+        portNum.add(1);
+        f.add(3);
+
+        portNum.add(5);
+        f.add(10);
+
+        portNum.add(2);
+        f.add(9);
+
+        Shades recoveredShades = new Shades(portNum, f, f);
+        recoveredShades.applyLagrange(3);*/
 
         //Chequeamos que la imagen sea divisible por 2k-2
         if((img.getTotalSize()) % (parser.getBlockSize()) != 0){
@@ -41,9 +45,9 @@ public class Main {
 
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) {
-                //pixel obtained can not be 0
+                //pixel obtained can not be 0. Neither 251 because 251 = 0 mod(251)
                 int pixel = img.getPixel(x, y);
-                if(pixel == 0){
+                if(pixel == 0 || pixel == 251){
                     pixel = 1;
                 }
                 pixels.add(pixel);
