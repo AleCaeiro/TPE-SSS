@@ -3,13 +3,13 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+// Clase que maneja una imagen en formato bmp ignorando el header
 public class SecretImage {
     private BufferedImage image;
 
-    public SecretImage(String imgPath) {
+    public SecretImage(String imgPath, String mode) {
         BufferedImage image = null;
         try{
-            // Cargar la imagen BMP
             this.image = ImageIO.read(new File(imgPath));
         }catch (IOException e){
             System.out.println("Error al abrir la imagen: " + e.getMessage());
@@ -36,8 +36,11 @@ public class SecretImage {
         this.image.getRaster().setSample(x, y, 0, newPixel);
     }
 
-
     public BufferedImage getImage() {
         return this.image;
+    }
+
+    public void generateFile(String filename) throws IOException {
+        ImageIO.write(image, "bmp", new File(filename));
     }
 }

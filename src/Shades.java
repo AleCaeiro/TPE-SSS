@@ -27,7 +27,7 @@ public class Shades {
         }
     }
 
-    private static class Pair {
+    protected static class Pair {
         private Integer left;
         private Integer right;
 
@@ -76,6 +76,7 @@ public class Shades {
         List<Pair> recoveredF = new ArrayList<>();
         List<Pair> recoveredG = new ArrayList<>();
 
+        // Convertimos entries del map a Pair(x,f_x) y Pair(x,g_x)
         for (Map.Entry<Integer, Pair> entry : evaluatedValues.entrySet() ) {
             recoveredF.add(new Pair(entry.getKey(), entry.getValue().getLeft()));
             recoveredG.add(new Pair(entry.getKey(), entry.getValue().getRight()));
@@ -133,5 +134,9 @@ public class Shades {
         result = GF251.transformToGF(result);
 
         return result;
+    }
+
+    public Pair getPair(Integer n) {
+        return evaluatedValues.get(n);
     }
 }

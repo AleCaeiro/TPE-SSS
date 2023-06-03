@@ -2,6 +2,7 @@ public class ArgumentsParser {
     private String mode;
     private String imgPath;
     private Integer k;
+    private Integer lsb;
     private String shadesDirectory;
 
     private Integer blockSize;
@@ -17,6 +18,7 @@ public class ArgumentsParser {
         this.mode = mode;
         this.imgPath = imgPath;
         this.k = Integer.parseInt(k);
+        this.lsb = this.k > 4 ? 2 : 4;
         this.shadesDirectory = shadesDirectory;
 
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
