@@ -4,7 +4,6 @@ public class ArgumentsParser {
     private Integer k;
     private Integer lsb;
     private String shadesDirectory;
-
     private Integer blockSize;
 
     private final static int BLOCK_MULTIPLIER = 2;
@@ -20,7 +19,6 @@ public class ArgumentsParser {
         this.k = Integer.parseInt(k);
         this.lsb = this.k > 4 ? 2 : 4;
         this.shadesDirectory = shadesDirectory;
-
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
     }
 

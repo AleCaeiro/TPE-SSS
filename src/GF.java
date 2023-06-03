@@ -24,6 +24,7 @@ public class GF {
     };
 
     private final int mod;
+
     public GF(int mod) {
         this.mod = mod;
     }
@@ -34,16 +35,11 @@ public class GF {
     }
 
     public Integer transformToGF(Integer num) {
-        num = num % this.mod;
-
-        if(num < 0) {
-            num += this.mod;
-        }
-
-        return num;
+        num %= this.mod;
+        return num < 0 ? num + this.mod : num;
     }
 
     public Integer getInverse(Integer num) {
-        return INVERSES[num-1];
+        return INVERSES[num - 1];
     }
 }

@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,7 @@ public class Shades {
 
     /*This constructor is for distribution*/
     public Shades(Block block, int n) {
-        for(int i = 1 ; i <= n ; i++) {
+        for (int i = 1; i <= n; i++) {
             evaluatedValues.put(i, new Pair(block.getF().evaluate(i), block.getG().evaluate(i)));
         }
     }
@@ -54,7 +53,7 @@ public class Shades {
 
         @Override
         public boolean equals(Object obj) {
-            if(this == obj) {
+            if (this == obj) {
                 return true;
             }
 
@@ -66,7 +65,7 @@ public class Shades {
     }
 
     public List<Polynomial> applyLagrange(int k) {
-        if(evaluatedValues.size() < k) {
+        if (evaluatedValues.size() < k) {
             System.out.println("No es posible hallar la imagen con menos de k sombras");
             return null;
         }
@@ -77,7 +76,7 @@ public class Shades {
         List<Pair> recoveredG = new ArrayList<>();
 
         // Convertimos entries del map a Pair(x,f_x) y Pair(x,g_x)
-        for (Map.Entry<Integer, Pair> entry : evaluatedValues.entrySet() ) {
+        for (Map.Entry<Integer, Pair> entry : evaluatedValues.entrySet()) {
             recoveredF.add(new Pair(entry.getKey(), entry.getValue().getLeft()));
             recoveredG.add(new Pair(entry.getKey(), entry.getValue().getRight()));
         }
@@ -90,7 +89,7 @@ public class Shades {
 
     private Polynomial lagrangeInterpolation(List<Pair> shades) {
         List<Integer> resultSi = new ArrayList<>();
-        Integer result = 0;
+        Integer result;
 
         // TODO: revisar que pasa cuando tenemos más n de los k necesarios
         // Agregar otra condicion de corte para no tener un polinomio de grado n
@@ -99,12 +98,9 @@ public class Shades {
             for (int i = 0; i < shades.size(); i++) {
                 result += (Li(shades.get(i), shades) * shades.get(i).getRight());
             }
-
             result = GF251.transformToGF(result);
-
             resultSi.add(result);
             shades.remove(shades.size() - 1);
-
             recalculateY(shades, result);
         }
 
@@ -124,9 +120,7 @@ public class Shades {
         for (Pair recoveredShade : recoveredShades) {
             if (!recoveredShade.equals(currentShade)) {
                 Integer denominator = ((currentShade.getLeft() - recoveredShade.getLeft()));
-
                 denominator = GF251.transformToGF(denominator);
-
                 result *= -recoveredShade.getLeft() * GF251.getInverse(denominator);
             }
         }

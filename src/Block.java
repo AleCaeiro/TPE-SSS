@@ -12,8 +12,7 @@ public class Block {
 
     public Block(List<Integer> pixels, int degree, int blockNum) {
         this.pixels = pixels;
-        //sublist do not include the right end of parameter, because of that we need to add 1 in each one
-        this.f = new Polynomial(pixels.subList(0, degree+1));
+        this.f = new Polynomial(pixels.subList(0, degree + 1));
         this.g = calculateG(this.f, pixels.subList(degree + 1, pixels.size()));
         this.blockNum = blockNum;
     }
@@ -23,7 +22,7 @@ public class Block {
 
         do {
             ri = GF251.generateRandom();
-        }while (ri == 0);
+        } while (ri == 0);
 
         Integer b0 = calculateEquation(ri, f.getCoefficient(0));
         Integer b1 = calculateEquation(ri, f.getCoefficient(1));

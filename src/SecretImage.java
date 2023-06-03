@@ -8,10 +8,9 @@ public class SecretImage {
     private BufferedImage image;
 
     public SecretImage(String imgPath, String mode) {
-        BufferedImage image = null;
-        try{
+        try {
             this.image = ImageIO.read(new File(imgPath));
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error al abrir la imagen: " + e.getMessage());
         }
     }
@@ -25,7 +24,7 @@ public class SecretImage {
     }
 
     public int getTotalSize() {
-        return this.getWidth()*this.getHeight();
+        return this.getWidth() * this.getHeight();
     }
 
     public int getPixel(int x, int y) {

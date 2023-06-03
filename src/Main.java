@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ public class Main {
         recoveredShades.applyLagrange(3);*/
 
         //Chequeamos que la imagen sea divisible por 2k-2
-        if((img.getTotalSize()) % (parser.getBlockSize()) != 0){
+        if ((img.getTotalSize()) % (parser.getBlockSize()) != 0) {
             System.out.println("La imagen no es divisible por la dimension del bloque");
             return;
         }
@@ -48,12 +47,12 @@ public class Main {
             for (int x = 0; x < img.getWidth(); x++) {
                 //pixel obtained can not be 0. Neither 251 because 251 = 0 mod(251)
                 int pixel = img.getPixel(x, y);
-                if(pixel % 251 == 0){
+                if (pixel % 251 == 0) {
                     pixel = 1;
                 }
                 pixels.add(pixel);
                 count++;
-                if(count == parser.getBlockSize()){
+                if (count == parser.getBlockSize()) {
                     Block currentBlock = new Block(pixels, parser.getK() - 1, blockNum);
                     shades.add(new Shades(currentBlock, n));
                     blockNum++;
@@ -71,7 +70,6 @@ public class Main {
 
             Integer f_x;
             Integer g_x;
-
 
 
             for (int y = 0; y < img.getHeight(); y++) {
@@ -94,17 +92,16 @@ public class Main {
 
     // Función que divide el número según valor lsb
     private static List<Integer> generateMaskedInteger(Integer num, Integer lsb) {
-        int mask ;
+        int mask;
         if (lsb == 2) {
             mask = 0x03;
-        }
-        else {
+        } else {
             mask = 0x0F;
         }
 
         List<Integer> parsedNum = new ArrayList<>();
 
-        for (int i = 0; i < 8/lsb; i++) {
+        for (int i = 0; i < 8 / lsb; i++) {
             int aux = num >> lsb * i;
             parsedNum.add(aux & mask);
         }

@@ -11,7 +11,7 @@ public class Polynomial {
         this.coefficients = new ArrayList<>(coefficients);
     }
 
-    public Integer getCoefficient(int degree){
+    public Integer getCoefficient(int degree) {
         return coefficients.get(degree);
     }
 
