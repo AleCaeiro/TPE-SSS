@@ -2,13 +2,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Block {
-    private final static int MOD = 251;
-    private final static GF GF251 = new GF(MOD);
 
     private final List<Integer> pixels;
     private final Polynomial f;
     private final Polynomial g;
     private final int blockNum;
+    private final static GF251 GF251 = new GF251();
 
     public Block(List<Integer> pixels, int degree, int blockNum) {
         this.pixels = pixels;

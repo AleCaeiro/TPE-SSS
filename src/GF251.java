@@ -1,9 +1,7 @@
 import java.util.Random;
 
-public class GF {
+public class GF251 {
 
-    // TODO: asignar dinámicamente según el mod, para hacer clase realmente genérica
-    // O que la clase se llame GF251 para la entrega
     private final static int [] INVERSES = {
             1, 126, 84, 63, 201, 42, 36, 157, 28, 226, 137, 21, 58, 18, 67, 204,
             192, 14, 185, 113, 12, 194, 131, 136, 241, 29, 93, 9, 26, 159, 81, 102,
@@ -23,20 +21,19 @@ public class GF {
             193, 230, 114, 25, 223, 94, 215, 209, 50, 188, 167, 125, 250
     };
 
-    private final int mod;
+    private final static int MOD = 251;
 
-    public GF(int mod) {
-        this.mod = mod;
+    public GF251() {
     }
 
     public int generateRandom() {
         Random auxRandom = new Random();
-        return auxRandom.nextInt(this.mod);
+        return auxRandom.nextInt(MOD);
     }
 
     public Integer transformToGF(Integer num) {
-        num %= this.mod;
-        return num < 0 ? num + this.mod : num;
+        num %= MOD;
+        return num < 0 ? num + MOD : num;
     }
 
     public Integer getInverse(Integer num) {

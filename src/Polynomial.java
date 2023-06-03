@@ -2,10 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Polynomial {
-    private final static int MOD = 251;
-    private final static GF GF251 = new GF(MOD);
 
     private final List<Integer> coefficients;
+    private final static GF251 GF251 = new GF251();
+
 
     public Polynomial(List<Integer> coefficients) {
         this.coefficients = new ArrayList<>(coefficients);
