@@ -13,6 +13,9 @@ public class Polynomial {
     public Integer getCoefficient(int degree) {
         return coefficients.get(degree);
     }
+    public List<Integer> getCoefficients() {
+        return coefficients;
+    }
 
     public int getDegree() {
         return coefficients.size() - 1;

@@ -1,5 +1,6 @@
 import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
@@ -25,9 +26,11 @@ public class SSSencoder {
         this.mask2 = this.lsb == 2 ? 0x03 : 0x0F;
         this.mask6 = this.lsb == 2 ? 0xFC : 0xF0;
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
+        this.images = getBMPImages(parser.getShadesDirectory());
 
         // Verificar si el archivo existe y si tiene la extensión .bmp
         if (parser.getMode().equals("d")) {
+            this.secretImage = new Image(parser.getImgPath());
             try {
                 File file = new File(parser.getImgPath());
                 if (!file.exists() || !file.isFile() || !file.getName().toLowerCase().endsWith(".bmp")) {
@@ -36,9 +39,11 @@ public class SSSencoder {
             } catch (NoSuchFileException e) {
                 System.out.println("Error: " + e.getMessage());
             }
+            setShadeNumInHeader(this.images);
         }
-
-        this.secretImage = new Image(parser.getImgPath());
+        else {
+            this.secretImage = new Image(parser.getImgPath(), this.images.get(0).getHeight(), this.images.get(0).getWidth());
+        }
 
         //Chequeamos que la imagen sea divisible por 2k-2
         try {
@@ -49,12 +54,7 @@ public class SSSencoder {
             System.out.println("Error: " + e.getMessage());
         }
 
-        this.images = getBMPImages(parser.getShadesDirectory());
         this.n = this.images.size();
-
-        if (parser.getMode().equals("d")) {
-            setShadeNumInHeader(this.images);
-        }
     }
 
     public int getK() {
@@ -105,7 +105,7 @@ public class SSSencoder {
                 pixels.add(pixel);
                 count++;
                 if (count == this.blockSize) {
-                    Block currentBlock = new Block(pixels, this.k - 1, blockNum);
+                    Block currentBlock = new Block(pixels, k - 1);
                     Shades shades = new Shades(currentBlock, n);
                     newPosition = insertShades(shades, newPosition[0], newPosition[1]);
                     blockNum++;
@@ -125,9 +125,9 @@ public class SSSencoder {
     }
 
     private void setShadeNumInHeader(List<Image> shades) {
-        int count = 1;
+        short count = 1;
         for (Image im : shades) {
-            im.setReservedByte((short) count);
+            im.setReservedByte(count);
             count++;
         }
     }
@@ -181,7 +181,57 @@ public class SSSencoder {
      --------------------------------------------------------------*/
 
     public void recover() {
+        List<Integer> x = new ArrayList<>();
 
+        for (Image image: images) {
+            x.add(image.getCarryId());
+        }
+
+        List<Integer> f_x = new ArrayList<>();
+        List<Integer> g_x = new ArrayList<>();
+
+        int[] newPosition = {0, secretImage.getHeight() - 1};
+
+        for (int i = 0; i < n ; i++) {
+            // Recuperar valor f_x y g_x de cada sombra por bloques
+            recoverInteger(newPosition[0], newPosition[1], images.get(i), f_x);
+            recoverInteger(newPosition[0], newPosition[1], images.get(i), g_x);
+        }
+
+        // Instanciar una Shades con el constructor para recovery
+        // Shades(List<Integer> x, List<Integer> f_x, List<Integer> g_x) {
+        Shades shades = new Shades(x, f_x, g_x);
+        // Instanciamos el block que estamos parados al recuperarlo según shades
+        Block currentBlock = new Block(shades.applyLagrange(k));
+        // Escribimos en la secretImage los pixels de ese block
+        // writeSecretImage(currentBlock.getPixels());
+        f_x.clear();
+        g_x.clear();
+
+        try {
+            secretImage.writeImage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int[] recoverInteger(int currentX, int currentY, Image image, List<Integer> toAdd) {
+        int aux;
+        Integer toRet = 0;
+
+        for (int x = 8 / this.lsb - 1; x >= 0; x--) {
+            toRet = toRet << 2;
+            aux = image.getPixel(currentX, currentY) & mask2;
+            toRet += aux;
+            currentX++;
+            if (currentX % image.getWidth() == 0) {
+                currentY--;
+                currentX = 0;
+            }
+        }
+
+        toAdd.add(toRet);
+        return new int[]{currentX, currentY};
     }
 
 }

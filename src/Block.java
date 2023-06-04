@@ -2,18 +2,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Block {
-
     private final List<Integer> pixels;
     private final Polynomial f;
     private final Polynomial g;
-    private final int blockNum;
     private final static GF251 GF251 = new GF251();
 
-    public Block(List<Integer> pixels, int degree, int blockNum) {
+    /*This constructor is for distribution*/
+    public Block(List<Integer> pixels, int degree) {
         this.pixels = pixels;
         this.f = new Polynomial(pixels.subList(0, degree + 1));
         this.g = calculateG(this.f, pixels.subList(degree + 1, pixels.size()));
-        this.blockNum = blockNum;
+    }
+
+    /*This constructor is for recovery*/
+    public Block(List<Polynomial> polynomials) {
+        // Method to detect cheating
+        this.f = polynomials.get(0);
+        this.g = polynomials.get(1);
+
+        // pixels se extrae de los dos polinomios
+        this.pixels = new ArrayList();
+        pixels.addAll(f.getCoefficients());
+        pixels.addAll(g.getCoefficients().subList(2, g.getDegree()));
     }
 
     private Polynomial calculateG(Polynomial f, List<Integer> restG) {
@@ -50,9 +60,5 @@ public class Block {
 
     public Polynomial getG() {
         return g;
-    }
-
-    public int getBlockNum() {
-        return blockNum;
     }
 }
