@@ -8,12 +8,22 @@ import javax.imageio.ImageIO;
 public class Image {
     private BufferedImage image;
     private final String filePath;
-    private static final int OFFSET_RESERVED1 = 6;
+    private final static int OFFSET_BYTES_RESERVED = 6;
+    private final static int OFFSET_BYTES_PER_PIXEL = 28;
+    private final static int BYTES_PER_PIXEL = 8;
 
     public Image(String imgPath) {
         this.filePath = imgPath;
         try {
             this.image = ImageIO.read(new File(imgPath));
+            int b = getByteOfHeader(OFFSET_BYTES_PER_PIXEL);
+            try {
+                if (b != BYTES_PER_PIXEL) {
+                    throw new UnsupportedOperationException("La imagen no es de 8 bits por píxel");
+                }
+            } catch (UnsupportedOperationException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
         } catch (IOException e) {
             System.out.println("Error al abrir la imagen: " + e.getMessage());
         }
@@ -54,7 +64,7 @@ public class Image {
     public void setReservedByte(short value) {
         try {
             RandomAccessFile file = new RandomAccessFile(filePath, "rw");
-            file.seek(OFFSET_RESERVED1);
+            file.seek(OFFSET_BYTES_RESERVED);
             file.writeShort(Short.reverseBytes(value));
             file.close();
         } catch (IOException e) {
@@ -62,10 +72,10 @@ public class Image {
         }
     }
 
-    public short getReservedByte() {
+    private short getByteOfHeader(int offset) {
         try {
             RandomAccessFile file = new RandomAccessFile(filePath, "r");
-            file.seek(OFFSET_RESERVED1);
+            file.seek(offset);
             short value = Short.reverseBytes(file.readShort());
             file.close();
             return value;
@@ -74,4 +84,5 @@ public class Image {
         }
         return -1;
     }
+
 }

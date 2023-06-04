@@ -6,7 +6,6 @@ public class Polynomial {
     private final List<Integer> coefficients;
     private final static GF251 GF251 = new GF251();
 
-
     public Polynomial(List<Integer> coefficients) {
         this.coefficients = new ArrayList<>(coefficients);
     }

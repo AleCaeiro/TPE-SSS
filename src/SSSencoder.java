@@ -1,6 +1,7 @@
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,49 +20,71 @@ public class SSSencoder {
     private final static int BLOCK_MULTIPLIER = 2;
 
     public SSSencoder(ArgumentsParser parser) {
-        this.secretImage = new Image(parser.getImgPath());
         this.k = parser.getK();
+        this.lsb = this.k > 4 ? 2 : 4;
+        this.mask2 = this.lsb == 2 ? 0x03 : 0x0F;
+        this.mask6 = this.lsb == 2 ? 0xFC : 0xF0;
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
 
+        // Verificar si el archivo existe y si tiene la extensión .bmp
+        if (parser.getMode().equals("d")) {
+            try {
+                File file = new File(parser.getImgPath());
+                if (!file.exists() || !file.isFile() || !file.getName().toLowerCase().endsWith(".bmp")) {
+                    throw new NoSuchFileException("El archivo no existe o no es formato .bmp");
+                }
+            } catch (NoSuchFileException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        }
+
+        this.secretImage = new Image(parser.getImgPath());
+
         //Chequeamos que la imagen sea divisible por 2k-2
-        if ((this.secretImage.getTotalSize()) % (this.blockSize) != 0) {
-            System.out.println("La imagen no es divisible por la dimension del bloque");
-            //TODO throw an exception
+        try {
+            if ((this.secretImage.getTotalSize()) % (this.blockSize) != 0) {
+                throw new IllegalArgumentException("La imagen no es divisible por la dimension del bloque");
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
         }
 
         this.images = getBMPImages(parser.getShadesDirectory());
+        this.n = this.images.size();
 
         if (parser.getMode().equals("d")) {
             setShadeNumInHeader(this.images);
         }
-
-        this.n = this.images.size();
-        this.lsb = this.k > 4 ? 2 : 4;
-        this.mask2 =  this.lsb == 2 ? 0x03 : 0x0F;
-        this.mask6 =  this.lsb == 2 ? 0xFC : 0xF0;
     }
 
     public int getK() {
         return this.k;
     }
+
     public int getN() {
         return this.n;
     }
+
     public List<Image> getImages() {
         return this.images;
     }
+
     public Image getSecretImage() {
         return this.secretImage;
     }
+
     public int getBlockSize() {
         return this.blockSize;
     }
+
     public int getLsb() {
         return this.lsb;
     }
+
     public int getMask2() {
         return this.mask2;
     }
+
     public int getMask6() {
         return this.mask6;
     }
@@ -76,7 +99,7 @@ public class SSSencoder {
         int[] newPosition = {0, secretImage.getHeight() - 1};
 
         // Generamos sombras de cada bloque de la imagen (n veces según número de portadora)
-        for (int y = secretImage.getHeight() - 1; y >= 0 ; y-- ) {
+        for (int y = secretImage.getHeight() - 1; y >= 0; y--) {
             for (int x = 0; x < secretImage.getWidth(); x++) {
                 int pixel = secretImage.getPixel(x, y);
                 pixels.add(pixel);
@@ -92,7 +115,7 @@ public class SSSencoder {
             }
         }
 
-        for (Image image: this.images) {
+        for (Image image : this.images) {
             try {
                 image.writeImage();
             } catch (IOException e) {
@@ -150,7 +173,7 @@ public class SSSencoder {
                 currentX = 0;
             }
         }
-        return new int[] {currentX, currentY};
+        return new int[]{currentX, currentY};
     }
 
     /*--------------------------------------------------------------
