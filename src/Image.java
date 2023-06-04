@@ -6,11 +6,9 @@ import javax.imageio.ImageIO;
 
 // Clase que maneja una imagen en formato bmp ignorando el header
 public class Image {
-
     private BufferedImage image;
-    private String filePath;
+    private final String filePath;
     private static final int OFFSET_RESERVED1 = 6;
-
 
     public Image(String imgPath) {
         this.filePath = imgPath;
@@ -41,12 +39,16 @@ public class Image {
         this.image.getRaster().setSample(x, y, 0, newPixel);
     }
 
+    public String getFilePath() {
+        return this.filePath;
+    }
+
     public BufferedImage getImage() {
         return this.image;
     }
 
-    public void generateFile(String filename) throws IOException {
-        ImageIO.write(image, "bmp", new File(filename));
+    public void writeImage() throws IOException {
+        ImageIO.write(image, "bmp", new File(filePath));
     }
 
     public void setReservedByte(short value) {

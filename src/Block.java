@@ -35,6 +35,8 @@ public class Block {
     }
 
     private Integer calculateEquation(int r, int a) {
+        // Check pixel isn't 0 or 251
+        a = GF251.transformToGF(a) == 0 ? 1 : a;
         return GF251.transformToGF(-(r * a));
     }
 

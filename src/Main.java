@@ -10,9 +10,9 @@ public class Main {
         ArgumentsParser parser = new ArgumentsParser(args[0], args[1], args[2], args[3]);
         SSSencoder sss = new SSSencoder(parser);
         if (parser.getMode().equals("d")) {
-            sss.recover();
-        } else {
             sss.distribute();
+        } else {
+            sss.recover();
         }
     }
 }

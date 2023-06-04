@@ -1,4 +1,6 @@
+import javax.imageio.ImageIO;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +20,25 @@ public class SSSencoder {
 
     public SSSencoder(ArgumentsParser parser) {
         this.secretImage = new Image(parser.getImgPath());
-        this.images = getBMPImages(parser.getShadesDirectory());
-        setShadeNumInHeader(this.images);
-        this.n = this.images.size();
         this.k = parser.getK();
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
-        this.lsb = this.k > 4 ? 2 : 4;
-        this.mask2 =  this.lsb == 2 ? 0x03 : 0x0F;
-        this.mask6 =  this.lsb == 2 ? 252 : 240;
 
         //Chequeamos que la imagen sea divisible por 2k-2
         if ((this.secretImage.getTotalSize()) % (this.blockSize) != 0) {
             System.out.println("La imagen no es divisible por la dimension del bloque");
             //TODO throw an exception
         }
+
+        this.images = getBMPImages(parser.getShadesDirectory());
+
+        if (parser.getMode().equals("d")) {
+            setShadeNumInHeader(this.images);
+        }
+
+        this.n = this.images.size();
+        this.lsb = this.k > 4 ? 2 : 4;
+        this.mask2 =  this.lsb == 2 ? 0x03 : 0x0F;
+        this.mask6 =  this.lsb == 2 ? 0xFC : 0xF0;
     }
 
     public int getK() {
@@ -60,38 +67,38 @@ public class SSSencoder {
     }
 
     /*--------------------------------------------------------------
-    -------------------------DESTRIBUTE-----------------------------
+    -------------------------DISTRIBUTE-----------------------------
      --------------------------------------------------------------*/
     public void distribute() {
         List<Integer> pixels = new ArrayList<>();
         int count = 0;
         int blockNum = 1;
-        Integer currentX = 0;
-        Integer currentY = 0;
-        int[] newPosition;
+        int[] newPosition = {0, secretImage.getHeight() - 1};
+
         // Generamos sombras de cada bloque de la imagen (n veces según número de portadora)
-        for (int y = 0; y < secretImage.getHeight(); y++) {
+        for (int y = secretImage.getHeight() - 1; y >= 0 ; y-- ) {
             for (int x = 0; x < secretImage.getWidth(); x++) {
-                //pixel obtained can not be 0. Neither 251 because 251 = 0 mod(251)
                 int pixel = secretImage.getPixel(x, y);
-                if (pixel % 251 == 0) {
-                    pixel = 1;
-                }
                 pixels.add(pixel);
                 count++;
                 if (count == this.blockSize) {
                     Block currentBlock = new Block(pixels, this.k - 1, blockNum);
                     Shades shades = new Shades(currentBlock, n);
-                    newPosition = insertShades(shades, n, this.images, currentX, currentY);
-                    currentX = newPosition[0];
-                    currentY = newPosition[1];
+                    newPosition = insertShades(shades, newPosition[0], newPosition[1]);
                     blockNum++;
                     count = 0;
                     pixels.clear();
                 }
             }
         }
-        System.out.println(currentX);
+
+        for (Image image: this.images) {
+            try {
+                image.writeImage();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void setShadeNumInHeader(List<Image> shades) {
@@ -114,13 +121,13 @@ public class SSSencoder {
         return imageList;
     }
 
-    private int[] insertShades(Shades shades, int n, List<Image> sharedImages, Integer currentX, Integer currentY) {
-        int[] newPosition = {currentX, currentY};
+    private int[] insertShades(Shades shades, Integer currentX, Integer currentY) {
+        int[] newPosition = null;
         Integer f_x;
         Integer g_x;
         Image tmpImage;
         for (int i = 1; i <= n; i++) {
-            tmpImage = sharedImages.get(i - 1);
+            tmpImage = images.get(i - 1);
             f_x = shades.getPair(i).getLeft();
             g_x = shades.getPair(i).getRight();
             newPosition = insertLsb(currentX, currentY, tmpImage, f_x);
@@ -130,29 +137,20 @@ public class SSSencoder {
     }
 
     private int[] insertLsb(int currentX, int currentY, Image tmpImage, int value) {
-        int[] newPosition = {currentX, currentY};
         int aux;
         int pixel;
         for (int x = 8 / this.lsb - 1; x >= 0; x--) {
-            if (currentX < tmpImage.getWidth() && currentY < tmpImage.getHeight()) {
-                System.out.println("x" + currentX);
-                System.out.println("y" + currentY);
-
-                pixel = tmpImage.getPixel(currentX, currentY);
-                aux = (value >> this.lsb * x) & this.mask2;
-                pixel = (pixel & this.mask6) + aux;
-                tmpImage.setPixel(currentX, currentY, pixel);
-            }
+            pixel = tmpImage.getPixel(currentX, currentY);
+            aux = (value >> this.lsb * x) & this.mask2;
+            pixel = (pixel & this.mask6) + aux;
+            tmpImage.setPixel(currentX, currentY, pixel);
             currentX++;
             if (currentX % tmpImage.getWidth() == 0) {
-                currentY++;
+                currentY--;
                 currentX = 0;
             }
         }
-
-        newPosition[0] = currentX;
-        newPosition[1] = currentY;
-        return newPosition;
+        return new int[] {currentX, currentY};
     }
 
     /*--------------------------------------------------------------
