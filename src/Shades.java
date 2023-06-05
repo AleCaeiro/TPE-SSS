@@ -54,9 +54,9 @@ public class Shades {
         Integer result;
 
         List<Pair> shadesAux = new ArrayList<>(shades.subList(0, k));
+        List<Pair> remainingShades = new ArrayList<>(shades.subList(k, shades.size()));
 
-        // TODO: revisar que pasa cuando tenemos más n de los k necesarios
-        // Agregar otra condicion de corte para no tener un polinomio de grado n
+        // Se usan las primeras k sombras para interpolar el polinomio
         while (shadesAux.size() > 0) {
             result = 0;
             for (int i = 0; i < shadesAux.size(); i++) {
@@ -68,7 +68,17 @@ public class Shades {
             recalculateY(shadesAux, result);
         }
 
-        return new Polynomial(resultSi);
+        Polynomial toReturn = new Polynomial(resultSi);
+
+        // Se verifica que el polinomio interpolado cumpla con las demás sombras
+        // Si alguna no valida, entonces hubo cheating fuera de la interpolación
+        for (Pair shade: remainingShades) {
+            if (!toReturn.evaluate(shade.getLeft()).equals(shade.getRight()) ) {
+                System.out.println("Cheating detected");
+                System.exit(1);            }
+        }
+
+        return toReturn;
     }
 
     private void recalculateY(List<Pair> shades, int si) {

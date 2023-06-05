@@ -19,7 +19,7 @@ public class Block {
         // Method to detect cheating
         if (!detectCheating(polynomials.get(0), polynomials.get(1))) {
             System.out.println("Cheating detected");
-            System.exit(0);
+            System.exit(1);
         }
 
         this.f = polynomials.get(0);
