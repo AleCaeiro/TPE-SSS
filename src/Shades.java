@@ -55,7 +55,7 @@ public class Shades {
 
         // TODO: revisar que pasa cuando tenemos más n de los k necesarios
         // Agregar otra condicion de corte para no tener un polinomio de grado n
-        while (resultSi.size() <= k) {
+        while (resultSi.size() < k) {
             result = 0;
             for (int i = 0; i < shades.size(); i++) {
                 result += (calculateLi(shades.get(i), shades) * shades.get(i).getRight());

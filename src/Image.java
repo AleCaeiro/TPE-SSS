@@ -75,7 +75,6 @@ public class Image {
         try {
             RandomAccessFile file = new RandomAccessFile(filePath, "rw");
             file.seek(OFFSET_BYTES_RESERVED);
-            file.readInt();
             file.writeShort(Short.reverseBytes(value));
             file.close();
         } catch (IOException e) {

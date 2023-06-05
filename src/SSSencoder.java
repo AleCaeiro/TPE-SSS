@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ public class SSSencoder {
         this.mask2 = this.lsb == 2 ? 0x03 : 0x0F;
         this.mask6 = this.lsb == 2 ? 0xFC : 0xF0;
         this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
-        this.images = getBMPImages(parser.getShadesDirectory());
+
 
         // Verificar si el archivo existe y si tiene la extensión .bmp
         if (parser.getMode().equals("d")) {
@@ -39,9 +40,11 @@ public class SSSencoder {
             } catch (NoSuchFileException e) {
                 System.out.println("Error: " + e.getMessage());
             }
-            setShadeNumInHeader(this.images);
+            setShadeNumInHeader(parser.getShadesDirectory());
+            this.images = getBMPImages(parser.getShadesDirectory());
         }
         else {
+            this.images = getBMPImages(parser.getShadesDirectory());
             this.secretImage = new Image(parser.getImgPath(), this.images.get(0).getHeight(), this.images.get(0).getWidth());
         }
 
@@ -124,12 +127,28 @@ public class SSSencoder {
         }
     }
 
-    private void setShadeNumInHeader(List<Image> shades) {
+    private void setShadeNumInHeader(String pathDirectory) {
         short count = 1;
-        for (Image im : shades) {
-            im.setReservedByte(count);
-            count++;
+
+        File folder = new File(pathDirectory);
+        File[] files = folder.listFiles();
+        if (!folder.exists()) {
+            throw new IllegalArgumentException("El path al directorio especificado es erroneo o  no existe");
         }
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    RandomAccessFile otherFile = new RandomAccessFile(file.getName(), "rw");
+                    otherFile.seek(6);
+                    otherFile.writeShort(Short.reverseBytes(count));
+                    otherFile.close();
+                    count++;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
     private List<Image> getBMPImages(String pathDirectory) {
