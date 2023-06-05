@@ -2,8 +2,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-//TODO: check carryId lost in image after last write
-
+// TODO: add iterator to go over imagePixels
 // Clase que maneja una imagen en formato bmp ignorando el header
 public class Image {
     private BufferedImage image;
@@ -71,7 +70,6 @@ public class Image {
     }
 
     public void setReservedByte(short value) {
-        carryId = value;
         try {
             RandomAccessFile file = new RandomAccessFile(filePath, "rw");
             file.seek(OFFSET_BYTES_RESERVED);
