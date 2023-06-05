@@ -136,6 +136,9 @@ public class SSSencoder {
         List<Image> imageList = new ArrayList<>();
         File folder = new File(pathDirectory);
         File[] files = folder.listFiles();
+        if (!folder.exists()) {
+            throw new IllegalArgumentException("El path al directorio especificado es erroneo o  no existe");
+        }
         if (files != null) {
             for (File file : files) {
                 imageList.add(new Image(String.format(pathDirectory + '/' + file.getName())));

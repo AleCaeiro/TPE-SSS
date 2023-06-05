@@ -19,7 +19,6 @@ public class Image {
         try {
             this.image = ImageIO.read(new File(imgPath));
             int b = getByteOfHeader(OFFSET_BYTES_PER_PIXEL);
-            System.out.println(b);
             try {
                 if (b != BYTES_PER_PIXEL) {
                     throw new UnsupportedOperationException("La imagen no es de 8 bits por píxel");
