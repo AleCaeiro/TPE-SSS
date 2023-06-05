@@ -190,23 +190,34 @@ public class SSSencoder {
         List<Integer> f_x = new ArrayList<>();
         List<Integer> g_x = new ArrayList<>();
 
-        int[] newPosition = {0, secretImage.getHeight() - 1};
+        int[] newPositionRead = {0, secretImage.getHeight() - 1};
+        int[] newPositionWrite = {0, secretImage.getHeight() - 1};
 
-        for (int i = 0; i < n ; i++) {
-            // Recuperar valor f_x y g_x de cada sombra por bloques
-            recoverInteger(newPosition[0], newPosition[1], images.get(i), f_x);
-            recoverInteger(newPosition[0], newPosition[1], images.get(i), g_x);
+        int currentX, currentY;
+
+        int blockCount = 0;
+        int totalBlocks = secretImage.getTotalSize() / blockSize;
+
+        while(blockCount < totalBlocks) {
+            currentX = newPositionRead[0];
+            currentY = newPositionRead[1];
+            for (int i = 0; i < n ; i++) {
+                // Recuperar valor f_x y g_x de cada sombra por bloques
+                newPositionRead = recoverInteger(currentX, currentY, images.get(i), f_x);
+                newPositionRead = recoverInteger(newPositionRead[0], newPositionRead[1], images.get(i), g_x);
+            }
+
+            // Instanciar una Shades con el constructor para recovery
+            // Shades(List<Integer> x, List<Integer> f_x, List<Integer> g_x) {
+            Shades shades = new Shades(x, f_x, g_x);
+            // Instanciamos el block que estamos parados al recuperarlo según shades
+            Block currentBlock = new Block(shades.applyLagrange(k));
+            // Escribimos en la secretImage los pixels de ese block
+            newPositionWrite = writeSecretImage(newPositionWrite[0], newPositionWrite[1], currentBlock.getPixels());
+            f_x.clear();
+            g_x.clear();
+            blockCount++;
         }
-
-        // Instanciar una Shades con el constructor para recovery
-        // Shades(List<Integer> x, List<Integer> f_x, List<Integer> g_x) {
-        Shades shades = new Shades(x, f_x, g_x);
-        // Instanciamos el block que estamos parados al recuperarlo según shades
-        Block currentBlock = new Block(shades.applyLagrange(k));
-        // Escribimos en la secretImage los pixels de ese block
-        // writeSecretImage(currentBlock.getPixels());
-        f_x.clear();
-        g_x.clear();
 
         try {
             secretImage.writeImage();
@@ -234,4 +245,15 @@ public class SSSencoder {
         return new int[]{currentX, currentY};
     }
 
+    private int[] writeSecretImage(int currentX, int currentY, List<Integer> pixels) {
+        for (Integer pixel:pixels) {
+            secretImage.setPixel(currentX, currentY, pixel);
+            currentX++;
+            if (currentX % secretImage.getWidth() == 0) {
+                currentY--;
+                currentX = 0;
+            }
+        }
+        return new int[]{currentX, currentY};
+    }
 }

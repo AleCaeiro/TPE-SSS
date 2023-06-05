@@ -43,19 +43,19 @@ public class Shades {
             recoveredG.add(new Pair(entry.getKey(), entry.getValue().getRight()));
         }
 
-        interpolatedPolynomials.add(lagrangeInterpolation(recoveredF));
-        interpolatedPolynomials.add(lagrangeInterpolation(recoveredG));
+        interpolatedPolynomials.add(lagrangeInterpolation(recoveredF, k));
+        interpolatedPolynomials.add(lagrangeInterpolation(recoveredG, k));
 
         return interpolatedPolynomials;
     }
 
-    private Polynomial lagrangeInterpolation(List<Pair> shades) {
+    private Polynomial lagrangeInterpolation(List<Pair> shades, int k) {
         List<Integer> resultSi = new ArrayList<>();
         Integer result;
 
         // TODO: revisar que pasa cuando tenemos más n de los k necesarios
         // Agregar otra condicion de corte para no tener un polinomio de grado n
-        while (shades.size() > 0) {
+        while (resultSi.size() <= k) {
             result = 0;
             for (int i = 0; i < shades.size(); i++) {
                 result += (calculateLi(shades.get(i), shades) * shades.get(i).getRight());
