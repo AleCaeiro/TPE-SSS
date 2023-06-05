@@ -93,7 +93,6 @@ public class SSSencoder {
     public void distribute() {
         List<Integer> pixels = new ArrayList<>();
         int count = 0;
-        int blockNum = 1;
         int[] newPosition = {0, secretImage.getHeight() - 1};
 
         // Generamos sombras de cada bloque de la imagen (n veces según número de portadora)
@@ -106,7 +105,6 @@ public class SSSencoder {
                     Block currentBlock = new Block(pixels, k - 1);
                     Shades shades = new Shades(currentBlock, n);
                     newPosition = insertShades(shades, newPosition[0], newPosition[1]);
-                    blockNum++;
                     count = 0;
                     pixels.clear();
                 }

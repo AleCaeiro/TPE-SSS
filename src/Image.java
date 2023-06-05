@@ -1,5 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import javax.imageio.ImageIO;
 
 // TODO: add iterator to go over imagePixels
@@ -103,4 +105,36 @@ public class Image {
     public void setCarryId(int carryId) {
         this.carryId = carryId;
     }
+
+//    public Iterator<Integer> iterator(){
+//        return new ImageIterator();
+//    }
+
+//    private class ImageIterator implements Iterator<Integer> {
+//        int currentX = 0;
+//        int currentY = image.getHeight() - 1;
+//
+//        @Override
+//        public boolean hasNext() {
+//            return currentX < image.getWidth() && currentY >= 0;
+//        }
+//
+//        @Override
+//        public Integer next() {
+//            if(!hasNext()){
+//                throw new NoSuchElementException();
+//            }
+//
+//            Integer toRet = getPixel(currentX, currentY);
+//
+//            currentX++;
+//            currentX++;
+//            if (currentX % image.getWidth() == 0) {
+//                currentY--;
+//                currentX = 0;
+//            }
+//
+//            return toRet;
+//        }
+//    }
 }

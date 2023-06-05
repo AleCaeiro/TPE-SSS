@@ -53,17 +53,19 @@ public class Shades {
         List<Integer> resultSi = new ArrayList<>();
         Integer result;
 
+        List<Pair> shadesAux = new ArrayList<>(shades.subList(0, k));
+
         // TODO: revisar que pasa cuando tenemos más n de los k necesarios
         // Agregar otra condicion de corte para no tener un polinomio de grado n
-        while (resultSi.size() < k) {
+        while (shadesAux.size() > 0) {
             result = 0;
-            for (int i = 0; i < shades.size(); i++) {
-                result += (calculateLi(shades.get(i), shades) * shades.get(i).getRight());
+            for (int i = 0; i < shadesAux.size(); i++) {
+                result += (calculateLi(shadesAux.get(i), shadesAux) * shadesAux.get(i).getRight());
             }
             result = GF251.transformToGF(result);
             resultSi.add(result);
-            shades.remove(shades.size() - 1);
-            recalculateY(shades, result);
+            shadesAux.remove(shadesAux.size() - 1);
+            recalculateY(shadesAux, result);
         }
 
         return new Polynomial(resultSi);
@@ -84,9 +86,9 @@ public class Shades {
                 Integer denominator = ((currentShade.getLeft() - recoveredShade.getLeft()));
                 denominator = GF251.transformToGF(denominator);
                 result *= -recoveredShade.getLeft() * GF251.getInverse(denominator);
+                result = GF251.transformToGF(result);
             }
         }
-        result = GF251.transformToGF(result);
         return result;
     }
 

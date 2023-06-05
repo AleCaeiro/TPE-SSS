@@ -1,11 +1,7 @@
-import java.io.IOException;
-import java.io.RandomAccessFile;
-
 public class Main {
-
     private final static int COUNT_ARGS = 4;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if (args.length != COUNT_ARGS) {
             System.out.println("Uso: java Main <modo> <imagen> <k> <directorio_sombras>");
             return;

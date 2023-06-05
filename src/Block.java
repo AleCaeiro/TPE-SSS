@@ -23,7 +23,7 @@ public class Block {
         // pixels se extrae de los dos polinomios
         this.pixels = new ArrayList();
         pixels.addAll(f.getCoefficients());
-        pixels.addAll(g.getCoefficients().subList(2, g.getDegree()));
+        pixels.addAll(g.getCoefficients().subList(2, g.getDegree() + 1));
     }
 
     private Polynomial calculateG(Polynomial f, List<Integer> restG) {
