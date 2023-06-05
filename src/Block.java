@@ -17,6 +17,10 @@ public class Block {
     /*This constructor is for recovery*/
     public Block(List<Polynomial> polynomials) {
         // Method to detect cheating
+        if (detectCheating(polynomials.get(0), polynomials.get(1))) {
+            System.out.println("Cheating detected");
+        }
+
         this.f = polynomials.get(0);
         this.g = polynomials.get(1);
 
@@ -24,6 +28,18 @@ public class Block {
         this.pixels = new ArrayList();
         pixels.addAll(f.getCoefficients());
         pixels.addAll(g.getCoefficients().subList(2, g.getDegree() + 1));
+    }
+
+    public List<Integer> getPixels() {
+        return pixels;
+    }
+
+    public Polynomial getF() {
+        return f;
+    }
+
+    public Polynomial getG() {
+        return g;
     }
 
     private Polynomial calculateG(Polynomial f, List<Integer> restG) {
@@ -50,15 +66,15 @@ public class Block {
         return GF251.transformToGF(-(r * a));
     }
 
-    public List<Integer> getPixels() {
-        return pixels;
-    }
+    private boolean detectCheating(Polynomial f, Polynomial g) {
+        for(int ri=1; ri < 251; ri++) {
+            int aux0 = ri * f.getCoefficient(0) + g.getCoefficient(0);
+            int aux1 = ri * f.getCoefficient(1) + g.getCoefficient(1);
+            if ( GF251.transformToGF(aux0) == 0 && GF251.transformToGF(aux1) == 0) {
+                return false;
+            }
+        }
 
-    public Polynomial getF() {
-        return f;
-    }
-
-    public Polynomial getG() {
-        return g;
+        return true;
     }
 }
