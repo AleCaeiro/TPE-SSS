@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import javax.imageio.ImageIO;
 
-// TODO: add iterator to go over imagePixels
-// Clase que maneja una imagen en formato bmp ignorando el header
 public class Image {
     private BufferedImage image;
     private final String filePath;
@@ -27,6 +25,8 @@ public class Image {
             } catch (UnsupportedOperationException e) {
                 System.out.println("Error: " + e.getMessage());
             }
+            //En caso de que no se haya asignado aun, queda en 0
+            //Se usa mayormente en recovery
             this.carryId = getByteOfHeader(OFFSET_BYTES_RESERVED);
         } catch (IOException e) {
             System.out.println("Error al abrir la imagen: " + e.getMessage());
@@ -106,35 +106,54 @@ public class Image {
         this.carryId = carryId;
     }
 
-//    public Iterator<Integer> iterator(){
-//        return new ImageIterator();
-//    }
+    public ImageIterator iterator(){
+        return new ImageIterator();
+    }
 
-//    private class ImageIterator implements Iterator<Integer> {
-//        int currentX = 0;
-//        int currentY = image.getHeight() - 1;
-//
-//        @Override
-//        public boolean hasNext() {
-//            return currentX < image.getWidth() && currentY >= 0;
-//        }
-//
-//        @Override
-//        public Integer next() {
-//            if(!hasNext()){
-//                throw new NoSuchElementException();
-//            }
-//
-//            Integer toRet = getPixel(currentX, currentY);
-//
-//            currentX++;
-//            currentX++;
-//            if (currentX % image.getWidth() == 0) {
-//                currentY--;
-//                currentX = 0;
-//            }
-//
-//            return toRet;
-//        }
-//    }
+    // Iterator para recorrer la matriz de bytes de la imagen en orden
+    public class ImageIterator implements Iterator<Integer> {
+        int currentX = 0;
+        int currentY = image.getHeight() - 1;
+        int totalPixels = 0;
+
+        int prevX = currentX;
+        int prevY = currentY;
+
+        @Override
+        public boolean hasNext() {
+            return totalPixels < getTotalSize();
+        }
+
+        @Override
+        public Integer next() {
+            if(!hasNext()){
+                throw new NoSuchElementException();
+            }
+
+            prevX = currentX;
+            prevY = currentY;
+
+            Integer toRet = getPixel(currentX, currentY);
+
+            currentX++;
+            totalPixels++;
+            if (currentX % image.getWidth() == 0) {
+                currentY--;
+                currentX = 0;
+            }
+
+            return toRet;
+        }
+
+        // Función que además de setear el pixel mueve el current al siguiente
+        public void setNextPixel(Integer pixel) {
+            setPixel(currentX, currentY, pixel);
+            next();
+        }
+
+        // Función utilizada para setear un pixel luego de haber hecho un next()
+        public void setCurrentPixel(Integer pixel) {
+            setPixel(prevX, prevY, pixel);
+        }
+    }
 }
