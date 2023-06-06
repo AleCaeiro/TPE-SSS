@@ -7,10 +7,10 @@
 - [Roman Gomez Kiss](https://github.com/rgomezkiss)
 
 
-# Contexto
+## Contexto
 
-La criptografía visual es un concepto introducido en 1994 por Adi Shamir, quienes 
-consideran un nuevo tipo de esquema criptográfico (como una extensión de esquemas
+La criptografía visual es un concepto introducido en 1994 por Adi Shamir, quien 
+considera un nuevo tipo de esquema criptográfico (como una extensión de esquemas
 de secreto compartido) para decodificar imágenes secretas sin usar cálculos criptográficos clásicos.
 
 Tanto Shamir como George Blakley exponen ([aqui](docs/Secreto_Compartido.pdf)) que guardar
@@ -27,8 +27,8 @@ desapercibida al ocultar su existencia misma.
 
 # Introducción del TPE
 
-En este TPE se busca realizar un programa en lenguaje Java que implemente el algoritmo de Imagen
-Secreta Compartida descripto en el documento [“(k,n) secret image sharing scheme capable of
+En este TPE se realizó un programa en lenguaje Java que implementa el algoritmo de Imagen
+Secreta Compartida descrito en el documento [“(k,n) secret image sharing scheme capable of
 cheating detection"](docs/Paper_Algoritmo.pdf).
 
 Dicho algoritmo propone un esquema para compartir una imagen secreta basado en el método de Shamir.
@@ -39,6 +39,54 @@ De esta forma, el programa permitirá:
 - Distribuir una imagen secreta de extensión “.bmp” en otras imágenes también de extensión “.bmp” que serán las sombras en un esquema (k, n) de secreto compartido. 
 - Recuperar una imagen secreta de extensión “.bmp” a partir de k imágenes, también de extensión “.bmp” 
 
-# Instalación y compilación
+# Requisitos
 
-Para correr el proyecto ... :
+- [Java JDK 17 LTS](https://www.oracle.com/java/technologies/downloads/#java17)
+
+#### Nota
+
+Este programa fue testeado en Pampero con la versión Java JDK 18.
+
+Para versiones anteriores, el programa fue testeado únicamente con Java 15, 16 y 17.
+
+# Compilación
+
+Para correr el proyecto se debe estar posicionado en la carpeta src y correr:
+
+```shell
+./compile.sh
+```
+
+para realizar la compilacion del programa, la cual generará un archivo SSSencoder.jar
+en el directorio src.
+
+# Ejecución
+
+Para ejecutar el programa se debe estar posicionado en la carpeta src del proyecto y correr:
+
+```shell
+java -jar ./SSSencoder.jar <modo> <imagenSecreta> <k> <directorio>
+```
+
+donde:
+- **Modo**: tiene dos posibles valores:
+  - **d**: para distribuir una imagen secreta en otras imágenes.
+  - **r**: para recuperar una imagen secreta a partir de otras imágenes.
+- **imagenSecreta**: corresponde al nombre de un archivo de extensión .bmp, y tiene dos usos según el modo elegido:
+  - Con la opción (**d**) este archivo debe existir, ya que es la imagen a ocultar y debe ser una imagen en blanco y negro (8 bits por pixel)
+  - Con la opción (**r**) será el nombre del archivo de salida, con la imagen secreta revelada.
+- **k**: es la cantidad mínima de sombras necesarias para recuperar el secreto en un esquema (k, n).
+- **directorio**: path a un directorio que debe contener imágenes de extensión .bmp, de 8 bits por píxel, de igual tamaño que la imagen secreta. 
+Además, deberá verificarse que existan por lo menos k imágenes en el directorio. Este parámetro tiene dos posibles usos según el modo:
+  - Si se elige el modo (**d**), es el path al directorio donde se encuentran las imágenes en las que se distribuirá el secreto
+  - Si se elige el modo (**r**), es el path al directorio donde están las imágenes que contienen oculto el secreto.
+
+## Ejemplo de ejecución
+
+Si corremos:
+
+```shell
+java -jar ./SSSencoder.jar r ./resources/secretImage/secreto.bmp 5 ./resources/grupo15 
+```
+
+obtendremos la imagen ocultada por la catedra en el archivo /resources/secretImage/secreto.bmp

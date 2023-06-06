@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import javax.imageio.ImageIO;
 
 public class Image {
+
     private BufferedImage image;
     private final String filePath;
     private final static int OFFSET_BYTES_RESERVED = 6;
@@ -82,17 +83,11 @@ public class Image {
 
     private int getByteOfHeader(int offset) {
         try (FileInputStream fileInputStream = new FileInputStream(filePath)) {
-            // Saltar los primeros 1C bytes (28 bytes) del encabezado
             fileInputStream.skip(offset);
-
-            // Leer el byte que contiene la cantidad de bits por píxel
-            int value = fileInputStream.read();
-
-            return value;
+            return fileInputStream.read();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         return -1;
     }
 
@@ -104,7 +99,7 @@ public class Image {
         this.carryId = carryId;
     }
 
-    public ImageIterator iterator(){
+    public ImageIterator iterator() {
         return new ImageIterator();
     }
 
@@ -113,7 +108,6 @@ public class Image {
         int currentX = 0;
         int currentY = image.getHeight() - 1;
         int totalPixels = 0;
-
         int prevX = currentX;
         int prevY = currentY;
 
@@ -124,7 +118,7 @@ public class Image {
 
         @Override
         public Integer next() {
-            if(!hasNext()){
+            if (!hasNext()) {
                 throw new NoSuchElementException();
             }
 

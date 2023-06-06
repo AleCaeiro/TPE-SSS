@@ -7,7 +7,6 @@ public class ArgumentsParser {
     private Image secretImage;
     private int k;
     private int blockSize;
-    private final static int BLOCK_MULTIPLIER = 2;
     private List<Image> images;
 
     public ArgumentsParser(String mode, String imgPath, String k, String shadesDirectory) {
@@ -43,17 +42,16 @@ public class ArgumentsParser {
                 System.exit(1);
             }
 
-            for (Image shadeImage:images) {
+            for (Image shadeImage : images) {
                 if (shadeImage.getWidth() != secretImage.getWidth() || shadeImage.getHeight() != secretImage.getHeight()) {
                     System.out.println("La imagen portadora " + shadeImage.getFilePath() + " no es del mismo tamaño que la imagen a ocultar");
                     System.exit(1);
                 }
             }
-        }
-        else {
+        } else {
             int height = images.get(0).getHeight();
             int width = images.get(0).getWidth();
-            for (Image shadeImage: images) {
+            for (Image shadeImage : images) {
                 if (shadeImage.getWidth() != width || shadeImage.getHeight() != height) {
                     System.out.println("La imagen portadora " + shadeImage.getFilePath() + " no es del mismo tamaño que las demas");
                     System.exit(1);
@@ -63,14 +61,14 @@ public class ArgumentsParser {
             this.secretImage = new Image(imgPath, height, width);
         }
         this.k = kNum;
-        this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
+        this.blockSize = (2 * this.k) - 2;
 
         if ((this.secretImage.getTotalSize()) % (this.blockSize) != 0) {
             System.out.println("La imagen no es divisible por la dimension del bloque");
             System.exit(1);
         }
 
-        if (images.size() < this.k){
+        if (images.size() < this.k) {
             System.out.println("No existen al menos k = " + this.k + " imagenes en el directorio");
             System.exit(1);
         }
@@ -105,11 +103,9 @@ public class ArgumentsParser {
 
         if (files != null) {
             for (File file : files) {
-                if (!file.getName().toLowerCase().endsWith(".bmp")) {
-                    System.out.println("La imagen portadora " + file.getAbsolutePath() + " no es de formato .bmp");
-                    System.exit(1);
+                if (file.getName().toLowerCase().endsWith(".bmp")) {
+                    imageList.add(new Image(pathDirectory + '/' + file.getName()));
                 }
-                imageList.add(new Image(pathDirectory + '/' + file.getName()));
             }
         }
 

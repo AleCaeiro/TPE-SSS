@@ -11,7 +11,6 @@ public class Shades {
     private final Map<Integer, Pair> evaluatedValues = new HashMap<>();
     private final static GF251 GF251 = new GF251();
 
-
     /*This constructor is for distribution*/
     public Shades(Block block, int n) {
         for (int i = 1; i <= n; i++) {
@@ -52,7 +51,6 @@ public class Shades {
     private Polynomial lagrangeInterpolation(List<Pair> shades, int k) {
         List<Integer> resultSi = new ArrayList<>();
         Integer result;
-
         List<Pair> shadesAux = new ArrayList<>(shades.subList(0, k));
         List<Pair> remainingShades = new ArrayList<>(shades.subList(k, shades.size()));
 
@@ -72,10 +70,11 @@ public class Shades {
 
         // Se verifica que el polinomio interpolado cumpla con las demás sombras
         // Si alguna no valida, entonces hubo cheating fuera de la interpolación
-        for (Pair shade: remainingShades) {
-            if (!toReturn.evaluate(shade.getLeft()).equals(shade.getRight()) ) {
+        for (Pair shade : remainingShades) {
+            if (!toReturn.evaluate(shade.getLeft()).equals(shade.getRight())) {
                 System.out.println("Cheating detected");
-                System.exit(1);            }
+                System.exit(1);
+            }
         }
 
         return toReturn;

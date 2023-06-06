@@ -69,7 +69,6 @@ public class Block {
     private boolean detectCheating(Polynomial f, Polynomial g) {
         int ri_1 = GF251.transformToGF(-g.getCoefficient(0) * GF251.getInverse(f.getCoefficient(0)));
         int ri_2 = GF251.transformToGF(-g.getCoefficient(1) * GF251.getInverse(f.getCoefficient(1)));
-
         return ri_1 == ri_2;
     }
 }
