@@ -1,5 +1,4 @@
 import java.io.*;
-import java.nio.file.NoSuchFileException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ public class SSSencoder {
     private final int lsb;
     private final int lsbmask;
     private final int pixelmask;
-    private final static int BLOCK_MULTIPLIER = 2;
 
     private final static GF251 GF251 = new GF251();
 
@@ -21,35 +19,9 @@ public class SSSencoder {
         this.lsb = this.k > 4 ? 2 : 4;
         this.lsbmask = this.lsb == 2 ? 0x03 : 0x0F;
         this.pixelmask = this.lsb == 2 ? 0xFC : 0xF0;
-        this.blockSize = (BLOCK_MULTIPLIER * this.k) - BLOCK_MULTIPLIER;
-
-        this.images = getBMPImages(parser.getShadesDirectory());
-
-        // Verificar si el archivo existe y si tiene la extensión .bmp
-        if (parser.getMode().equals("d")) {
-            this.secretImage = new Image(parser.getImgPath());
-            try {
-                File file = new File(parser.getImgPath());
-                if (!file.exists() || !file.isFile() || !file.getName().toLowerCase().endsWith(".bmp")) {
-                    throw new NoSuchFileException("El archivo no existe o no es formato .bmp");
-                }
-            } catch (NoSuchFileException e) {
-                System.out.println("Error: " + e.getMessage());
-            }
-        }
-        else {
-            this.secretImage = new Image(parser.getImgPath(), this.images.get(0).getHeight(), this.images.get(0).getWidth());
-        }
-
-        //Chequeamos que la imagen sea divisible por 2k-2
-        try {
-            if ((this.secretImage.getTotalSize()) % (this.blockSize) != 0) {
-                throw new IllegalArgumentException("La imagen no es divisible por la dimension del bloque");
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
+        this.blockSize = parser.getBlockSize();
+        this.images = parser.getImages();
+        this.secretImage = parser.getSecretImage();
         this.n = this.images.size();
     }
 
@@ -59,11 +31,9 @@ public class SSSencoder {
     public void distribute() {
         List<Integer> pixels = new ArrayList<>();
         int count = 0;
-        int[] newPosition = {0, secretImage.getHeight() - 1};
         Image.ImageIterator pixelIterator = secretImage.iterator();
 
         List<Image.ImageIterator> shadesIterators = new ArrayList<>();
-
         for (Image shadeImage: images) {
             shadesIterators.add(shadeImage.iterator());
         }
@@ -95,21 +65,6 @@ public class SSSencoder {
             image.setReservedByte(shadeCount);
             shadeCount++;
         }
-    }
-
-    private List<Image> getBMPImages(String pathDirectory) {
-        List<Image> imageList = new ArrayList<>();
-        File folder = new File(pathDirectory);
-        File[] files = folder.listFiles();
-        if (!folder.exists()) {
-            throw new IllegalArgumentException("El path al directorio especificado es erroneo o  no existe");
-        }
-        if (files != null) {
-            for (File file : files) {
-                imageList.add(new Image(String.format(pathDirectory + '/' + file.getName())));
-            }
-        }
-        return imageList;
     }
 
     private void insertShades(Shades shades, List<Image.ImageIterator> shadesIterators) {

@@ -25,7 +25,6 @@ public class Block {
         this.f = polynomials.get(0);
         this.g = polynomials.get(1);
 
-        // pixels se extrae de los dos polinomios
         this.pixels = new ArrayList<>();
         pixels.addAll(f.getCoefficients());
         pixels.addAll(g.getCoefficients().subList(2, g.getDegree() + 1));

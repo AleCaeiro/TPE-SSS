@@ -18,18 +18,16 @@ public class Image {
         try {
             this.image = ImageIO.read(new File(imgPath));
             int b = getByteOfHeader(OFFSET_BYTES_PER_PIXEL);
-            try {
-                if (b != BYTES_PER_PIXEL) {
-                    throw new UnsupportedOperationException("La imagen no es de 8 bits por píxel");
-                }
-            } catch (UnsupportedOperationException e) {
-                System.out.println("Error: " + e.getMessage());
+            if (b != BYTES_PER_PIXEL) {
+                System.out.println("La imagen no es de 8 bits por píxel");
+                System.exit(1);
             }
             //En caso de que no se haya asignado aun, queda en 0
             //Se usa mayormente en recovery
             this.carryId = getByteOfHeader(OFFSET_BYTES_RESERVED);
         } catch (IOException e) {
             System.out.println("Error al abrir la imagen: " + e.getMessage());
+            System.exit(1);
         }
     }
 

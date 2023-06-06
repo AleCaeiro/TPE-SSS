@@ -29,7 +29,7 @@ public class Shades {
     public List<Polynomial> applyLagrange(int k) {
         if (evaluatedValues.size() < k) {
             System.out.println("No es posible hallar la imagen con menos de k sombras");
-            return null;
+            System.exit(1);
         }
 
         List<Polynomial> interpolatedPolynomials = new ArrayList<>();
