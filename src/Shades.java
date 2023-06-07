@@ -4,21 +4,19 @@ import java.util.List;
 import java.util.Map;
 
 public class Shades {
-
-    // Mapa clave valor donde la clave es el X donde se evaluo.
+    // Mapa clave valor donde la clave es el X donde se evaluo
     // El valor es la imagen valuada en (f_x, g_x)
-    // Me quedan ya los tres valores asociados en una sola estructura
     private final Map<Integer, Pair> evaluatedValues = new HashMap<>();
     private final static GF251 GF251 = new GF251();
 
-    /*This constructor is for distribution*/
+    // Constructor para distribucion
     public Shades(Block block, int n) {
         for (int i = 1; i <= n; i++) {
             evaluatedValues.put(i, new Pair(block.getF().evaluate(i), block.getG().evaluate(i)));
         }
     }
 
-    /*This constructor is for recovery*/
+    // Constructor para recuperación
     public Shades(List<Integer> x, List<Integer> f_x, List<Integer> g_x) {
         for (int i = 0; i < x.size(); i++) {
             evaluatedValues.put(x.get(i), new Pair(f_x.get(i), g_x.get(i)));
@@ -45,6 +43,11 @@ public class Shades {
         interpolatedPolynomials.add(lagrangeInterpolation(recoveredF, k));
         interpolatedPolynomials.add(lagrangeInterpolation(recoveredG, k));
 
+        if (!detectCheating(interpolatedPolynomials.get(0), interpolatedPolynomials.get(1))) {
+            System.out.println("Cheating detectado");
+            System.exit(1);
+        }
+
         return interpolatedPolynomials;
     }
 
@@ -69,10 +72,10 @@ public class Shades {
         Polynomial toReturn = new Polynomial(resultSi);
 
         // Se verifica que el polinomio interpolado cumpla con las demás sombras
-        // Si alguna no valida, entonces hubo cheating fuera de la interpolación
+        // Si alguna no valida, entonces hubo cheating fuera de la interpolación o el k seleccionado no es válido
         for (Pair shade : remainingShades) {
             if (!toReturn.evaluate(shade.getLeft()).equals(shade.getRight())) {
-                System.out.println("Cheating detected");
+                System.out.println("Fallo en la interpolación. Valor de k inválido o cheating");
                 System.exit(1);
             }
         }
@@ -99,6 +102,12 @@ public class Shades {
             }
         }
         return result;
+    }
+
+    private boolean detectCheating(Polynomial f, Polynomial g) {
+        int ri_1 = GF251.transformToGF(-g.getCoefficient(0) * GF251.getInverse(f.getCoefficient(0)));
+        int ri_2 = GF251.transformToGF(-g.getCoefficient(1) * GF251.getInverse(f.getCoefficient(1)));
+        return ri_1 == ri_2;
     }
 
     public Pair getPair(Integer n) {

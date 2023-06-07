@@ -7,21 +7,15 @@ public class Block {
     private final Polynomial g;
     private final static GF251 GF251 = new GF251();
 
-    /*This constructor is for distribution*/
+    // Constructor para distribucion
     public Block(List<Integer> pixels, int degree) {
         this.pixels = pixels;
         this.f = new Polynomial(pixels.subList(0, degree + 1));
         this.g = calculateG(this.f, pixels.subList(degree + 1, pixels.size()));
     }
 
-    /*This constructor is for recovery*/
+    // Constructor para recuperación
     public Block(List<Polynomial> polynomials) {
-        // Method to detect cheating
-        if (!detectCheating(polynomials.get(0), polynomials.get(1))) {
-            System.out.println("Cheating detected");
-            System.exit(1);
-        }
-
         this.f = polynomials.get(0);
         this.g = polynomials.get(1);
 
@@ -64,11 +58,5 @@ public class Block {
         // Check pixel isn't 0 or 251
         a = GF251.transformToGF(a) == 0 ? 1 : a;
         return GF251.transformToGF(-(r * a));
-    }
-
-    private boolean detectCheating(Polynomial f, Polynomial g) {
-        int ri_1 = GF251.transformToGF(-g.getCoefficient(0) * GF251.getInverse(f.getCoefficient(0)));
-        int ri_2 = GF251.transformToGF(-g.getCoefficient(1) * GF251.getInverse(f.getCoefficient(1)));
-        return ri_1 == ri_2;
     }
 }

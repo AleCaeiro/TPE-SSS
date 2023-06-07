@@ -1,7 +1,6 @@
 import java.util.Random;
 
 public class GF251 {
-
     private final static int [] INVERSES = {
         0, 1, 126, 84, 63, 201, 42, 36, 157, 28, 226, 137, 21, 58, 18, 67, 204,
         192, 14, 185, 113, 12, 194, 131, 136, 241, 29, 93, 9, 26, 159, 81, 102,

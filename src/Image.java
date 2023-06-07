@@ -23,8 +23,9 @@ public class Image {
                 System.out.println("La imagen no es de 8 bits por píxel");
                 System.exit(1);
             }
-            //En caso de que no se haya asignado aun, queda en 0
-            //Se usa mayormente en recovery
+            // En caso de que no se haya asignado aun, queda en 0
+            // Se usa mayormente en recuperacion
+            // Al distribuir se trabaja con el orden en que fueron leidas
             this.carryId = getByteOfHeader(OFFSET_BYTES_RESERVED);
         } catch (IOException e) {
             System.out.println("Error al abrir la imagen: " + e.getMessage());
@@ -32,7 +33,7 @@ public class Image {
         }
     }
 
-    // Constructor para una imagen vacía (a usar para recuperar imagen secreta)
+    // Constructor para una imagen vacía, para usar en recuperacion
     public Image(String imgPath, int height, int width) {
         this.filePath = imgPath;
         this.image = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
