@@ -145,9 +145,10 @@ public class Shades {
                 return true;
             }
 
-            if (!(obj instanceof Pair other)) {
+            if (!(obj instanceof Pair)) {
                 return false;
             }
+            Pair other = (Pair) obj;
             return this.left.equals(other.left) && this.right.equals(other.right);
         }
     }

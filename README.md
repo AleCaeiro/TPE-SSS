@@ -43,26 +43,23 @@ De esta forma, el programa permitirá:
 
 - [Java JDK 17 LTS](https://www.oracle.com/java/technologies/downloads/#java17)
 
-#### Nota
-
-Este programa fue testeado en Pampero con la versión Java JDK 18.
-
+Nota: este programa fue testeado en Pampero con la versión Java JDK 18.
 Para versiones anteriores, el programa fue testeado únicamente con Java 15, 16 y 17.
 
 # Compilación
 
-Para correr el proyecto se debe estar posicionado en la carpeta src y correr:
+Para compilar se debe estar posicionado en la carpeta raiz del proyecto y correr:
 
 ```shell
 ./compile.sh
 ```
 
-para realizar la compilacion del programa, la cual generará un archivo SSSencoder.jar
+Esto generará un archivo SSSencoder.jar
 en el directorio src.
 
 # Ejecución
 
-Para ejecutar el programa se debe estar posicionado en la carpeta src del proyecto y correr:
+Para ejecutar el programa se debe estar posicionado en la carpeta raiz del proyecto y correr:
 
 ```shell
 java -jar ./SSSencoder.jar <modo> <imagenSecreta> <k> <directorio>
@@ -83,10 +80,23 @@ Además, deberá verificarse que existan por lo menos k imágenes en el director
 
 ## Ejemplo de ejecución
 
+### Recuperación
+
 Si corremos:
 
 ```shell
-java -jar ./SSSencoder.jar r ./resources/secretImage/secreto.bmp 5 ./resources/grupo15 
+java -jar ./SSSencoder.jar r ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15
 ```
 
-obtendremos la imagen ocultada por la catedra en el archivo /resources/secretImage/secreto.bmp
+obtendremos la imagen ocultada por la catedra en el archivo */resources/secretImage/secreto.bmp*
+
+### Distribución
+
+Si corremos:
+
+```shell
+java -jar ./SSSencoder.jar d ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15 
+```
+
+esconderemos la imagen *./resources/secretImage/secreto.bmp* en las imagenes de la carpeta */resources/grupo15* 
+

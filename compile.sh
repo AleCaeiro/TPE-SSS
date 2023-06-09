@@ -1,4 +1,4 @@
 #!/bin/bash
-javac *.java
-jar cfe SSSencoder.jar Main *.class
-rm *.class
+javac ./src/*.java
+jar cfe SSSencoder.jar Main -C ./src .
+rm ./src/*.class
