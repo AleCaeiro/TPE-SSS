@@ -1,6 +1,6 @@
 # TPE - Criptografía y Seguridad
 
-## Autores
+## Autores - Grupo 15
 - [Tomas Alvarez Escalante](https://github.com/tomalvarezz)
 - [Alejo Caeiro](https://github.com/AleCaeiro)
 - [Lucas Agustin Ferreiro](https://github.com/lukyferreiro)
@@ -54,15 +54,14 @@ Para compilar se debe estar posicionado en la carpeta raiz del proyecto y correr
 ./compile.sh
 ```
 
-Esto generará un archivo SSSencoder.jar
-en el directorio src.
+Esto generará un archivo ss.jar.
 
 # Ejecución
 
 Para ejecutar el programa se debe estar posicionado en la carpeta raiz del proyecto y correr:
 
 ```shell
-java -jar ./SSSencoder.jar <modo> <imagenSecreta> <k> <directorio>
+java -jar ./ss.jar <modo> <imagenSecreta> <k> <directorio>
 ```
 
 donde:
@@ -85,7 +84,7 @@ Además, deberá verificarse que existan por lo menos k imágenes en el director
 Si corremos:
 
 ```shell
-java -jar ./SSSencoder.jar r ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15
+java -jar ./ss.jar r ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15
 ```
 
 obtendremos la imagen ocultada por la catedra en el archivo */resources/secretImage/secreto.bmp*
@@ -95,7 +94,7 @@ obtendremos la imagen ocultada por la catedra en el archivo */resources/secretIm
 Si corremos:
 
 ```shell
-java -jar ./SSSencoder.jar d ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15 
+java -jar ./ss.jar d ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15 
 ```
 
 esconderemos la imagen *./resources/secretImage/secreto.bmp* en las imagenes de la carpeta */resources/grupo15* 
