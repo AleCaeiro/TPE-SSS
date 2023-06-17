@@ -87,7 +87,7 @@ Si corremos:
 java -jar ./ss.jar r ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15
 ```
 
-obtendremos la imagen ocultada por la catedra en el archivo */resources/secretImage/secreto.bmp*
+obtendremos la imagen ocultada por la catedra (k=5) en el archivo */src/resources/secretImage/secreto.bmp*
 
 ### Distribución
 
@@ -97,5 +97,5 @@ Si corremos:
 java -jar ./ss.jar d ./src/resources/secretImage/secreto.bmp 5 ./src/resources/grupo15 
 ```
 
-esconderemos la imagen *./resources/secretImage/secreto.bmp* en las imagenes de la carpeta */resources/grupo15* 
+esconderemos la imagen *./src/resources/secretImage/secreto.bmp* con k=5 las imagenes de la carpeta */src/resources/grupo15* 
 
